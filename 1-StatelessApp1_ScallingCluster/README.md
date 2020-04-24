@@ -13,3 +13,8 @@
 ```
     $ kubectl get pods -l app=nginx
 ```
+
+>Delete the deployment by name:
+```
+    $ kubectl delete deployment nginx-deployment
+```
