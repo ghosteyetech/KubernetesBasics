@@ -23,6 +23,44 @@ The Client Service, called mysql-read, is a normal Service with its own cluster 
 
 Note that only read queries can use the load-balanced Client Service. Because there is only one MySQL master, clients should connect directly to the MySQL master Pod (through its DNS entry within the Headless Service) to execute writes.
 
+> StatefulSet
+Finally, create the StatefulSet from the mysql-statefulset.yaml configuration file:
+```
+    $ kubectl apply -f mysql-statefulset.yaml
+```
 
+> Can watch the startup progress by running:
+```
+    $ kubectl get pods -l app=mysql --watch
+```
 
+## Sending client traffic
+can send test queries to the MySQL master (hostname mysql-0.mysql) by running a temporary container with the mysql:5.7 image and running the mysql client binary.
+```
+    $ kubectl run mysql-client --image=mysql:5.7 -i --rm --restart=Never -- mysql -h mysql-0.mysql <<EOF CREATE  DATABASE test; CREATE TABLE test.messages (message VARCHAR(250)); INSERT  INTO test.messages VALUES ('hello'); EOF
+```
+
+## Cleaning up
+
+Cancel the SELECT @@server_id loop by pressing Ctrl+C in its terminal, or running the following from another terminal:
+```
+    $ kubectl delete pod mysql-client-loop --now
+```
+Delete the StatefulSet. This also begins terminating the Pods.
+```
+    $ kubectl delete statefulset mysql
+```
+Verify that the Pods disappear. They might take some time to finish terminating.
+```
+    $ kubectl get pods -l app=mysql
+```
+Delete the ConfigMap, Services, and PersistentVolumeClaims.
+```
+    $ kubectl delete configmap,service,pvc -l app=mysql
+```
+
+Delete specific pod by name
+```
+    $ kubectl delete pod mysql-5456cbb767-qmnmt --now
+```
 

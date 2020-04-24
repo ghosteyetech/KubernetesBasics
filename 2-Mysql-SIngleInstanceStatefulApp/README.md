@@ -38,6 +38,11 @@ The preceding YAML file creates a service that allows other Pods in the cluster 
 ```
 This command creates a new Pod in the cluster running a MySQL client and connects it to the server through the Service. If it connects, you know your stateful MySQL database is up and running.
 
+>Get mysql running service details(like ip):
+```
+    $ kubectl get pod mysql -o wide
+```
+
 ## Delete the deployed objects by name:
 ```
     $ kubectl delete deployment,svc mysql
