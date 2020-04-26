@@ -9,9 +9,14 @@ Tutorail Link: https://www.oreilly.com/content/how-to-manage-docker-containers-i
     $ kubectl get pods
 ```
 
->Deploy service using wildflyapp-service.yaml
+> Get description of pods with events
 ```
-    $ kubectl apply -f wildflyapp-service.yaml
+    $ kubectl describe pods
+```
+
+>Deploy service using wildflyapp-deployment.yaml
+```
+    $ kubectl apply -f wildflyapp-deployment.yaml
 ```
 > Watching pogress of pod by app name
 ```
@@ -21,6 +26,11 @@ Tutorail Link: https://www.oreilly.com/content/how-to-manage-docker-containers-i
 >Let’s use curl to see if we can get data from the wn-sass-web-portal application’s healthcheck endpoint:
 ```
     $ curl $(minikube service wn-sass-web-portal --url)/WNSassWebPortal
+```
+
+>To find out the exposed IP and Port inside the cluster we can use describe service:
+```
+    $ kubectl describe services/wn-sass-web-portal
 ```
 
 ## Stoping and deleting pod
@@ -38,6 +48,11 @@ Mark the node as unschedulable by using the kubectl cordon command. This ensures
 Delete the ConfigMap, Services, and PersistentVolumeClaims.
 ```
     $ kubectl delete configmap,service,pvc,rc -l app=wn-sass-web-portal
+```
+
+>Delete the deployment by name:
+```
+    $ kubectl delete deployment wn-sass-web-portal
 ```
 
 Delete pods:

@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wn-sass-web-portal
+  labels:
+    app: wn-sass-web-portal
+spec:
+  type: NodePort # Important! This will expose a node port over your Kubernetes IP
+  selector:
+    app: wn-sass-web-portal
+  ports:
+  - protocol: TCP
+    port: 8080
+    name: http
+    nodePort: 32222 # Port you’ll use to access app through the Kubernetes IP
+    targetPort: 8080 # A Service can map any incoming port to a targetPort. Best the targetPort is set to the same value as the port field.
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wn-sass-web-portal
+spec:
+  selector:
+    matchLabels:
+      app: wn-sass-web-portal
+  replicas: 2 # Number of pods running with the same image at any point in time
+  template:
+    metadata:
+      labels:
+        app: wn-sass-web-portal # Label we’ll use to access app later on
+    spec:
+      containers:
+      - name: wn-sass-web-portal
+        # Following docker image hosted in docker hub
+        image: sameerat8/wildfly-wn-saas-web:1.0
+        ports:
+        - containerPort: 8080 # Port exposed by the container
+        # livenessProbe: # If pod failed this request it keeps terminating and restarting untill this succeess, But intsted of deployment, by using ReplicationController let keep running pod even the helth check fails
+        #   httpGet:
+        #     path: /WNSassWebPortal
+        #     port: 8080
+        #   initialDelaySeconds: 30
+        #   timeoutSeconds: 1
