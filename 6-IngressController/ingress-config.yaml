@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-node-adv-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: \"false\"
+spec:
+  backend:
+    serviceName: wildfly-app-healthcheck # Can specify the default node in backend, and route to different node by the path in rules,
+    servicePort: 8080
+  rules:
+  - host: wildfly-app.info
+    http:
+      paths:
+      - path: /WildFlyAppWithHealthCheck/*
+        backend:
+          serviceName: wildfly-app-healthcheck
+          servicePort: 8080
+      - path: /WNSassWebPortal
+        backend:
+          serviceName: wn-sass-web-portal
+          servicePort: 8080

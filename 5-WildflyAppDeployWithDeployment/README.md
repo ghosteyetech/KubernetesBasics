@@ -12,6 +12,8 @@ Tutorail Link: https://www.oreilly.com/content/how-to-manage-docker-containers-i
 > Get description of pods with events
 ```
     $ kubectl describe pods
+    or
+    $ kubectl describe pod wn-sass-web-portal
 ```
 
 >Deploy service using wildflyapp-deployment.yaml

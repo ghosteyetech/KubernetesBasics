@@ -2,51 +2,51 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wn-sass-web-portal
+  name: wildfly-app-healthcheck
   labels:
-    app: wn-sass-web-portal
+    app: wildfly-app-healthcheck
 spec:
   type: NodePort # Important! This will expose a node port over your Kubernetes IP
   selector:
-    app: wn-sass-web-portal
+    app: wildfly-app-healthcheck
   ports:
   - protocol: TCP
     port: 8080
     name: http
-    nodePort: 32222 # Port you’ll use to access app through the Kubernetes IP
+    # nodePort: 32223 # Port you’ll use to access app through the Kubernetes IP
     targetPort: 8080 # A Service can map any incoming port to a targetPort. Best the targetPort is set to the same value as the port field.
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wn-sass-web-portal
+  name: wildfly-app-healthcheck
 spec:
   selector:
     matchLabels:
-      app: wn-sass-web-portal
+      app: wildfly-app-healthcheck
   replicas: 1 # Number of pods running with the same image at any point in time
   template:
     metadata:
       labels:
-        app: wn-sass-web-portal # Label we’ll use to access app later on
+        app: wildfly-app-healthcheck # Label we’ll use to access app later on
     spec:
       containers:
-      - name: wn-sass-web-portal
+      - name: wildfly-app-healthcheck
         # Following docker image hosted in docker hub
-        image: sameerat8/wildfly-wn-saas-web:1.0
+        image: sameerat8/wildfly-app-with-healthcheck:1.0
         ports:
         - containerPort: 8080 # Port exposed by the container
         readinessProbe:
           httpGet:
-            path: /WNSassWebPortal
+            path: /WildFlyAppWithHealthCheck/healthcheck
             port: 8080
-          timeoutSeconds: 10
           initialDelaySeconds: 120 # no of seconds before performing the first probe
+          timeoutSeconds: 10
         livenessProbe: # If pod failed this request it keeps terminating and restarting untill this succeess, But intsted of deployment, by using ReplicationController let keep running pod even the helth check fails
           httpGet:
-            path: /WNSassWebPortal # Any code greater than or equal to 200 and less than 400 indicates success.
+            path: /WildFlyAppWithHealthCheck/healthcheck # Any code greater than or equal to 200 and less than 400 indicates success.
             port: 8080
           initialDelaySeconds: 120 # no of seconds before performing the first probe
           timeoutSeconds: 10
-          periodSeconds: 3 # perform a liveness probe every 3 seconds
+          periodSeconds: 10 # perform a liveness probe every 3 seconds
