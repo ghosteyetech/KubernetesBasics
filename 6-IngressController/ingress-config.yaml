@@ -9,10 +9,10 @@ spec:
     serviceName: wildfly-app-healthcheck # Can specify the default node in backend, and route to different node by the path in rules,
     servicePort: 8080
   rules:
-  - host: wildfly-app.info
+  - host: # Could use any host but need to configured in /etc/hosts
     http:
       paths:
-      - path: /WildFlyAppWithHealthCheck/*
+      - path: /WildFlyAppWithHealthCheck
         backend:
           serviceName: wildfly-app-healthcheck
           servicePort: 8080

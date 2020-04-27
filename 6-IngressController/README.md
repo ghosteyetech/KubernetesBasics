@@ -92,6 +92,11 @@ and you can use kubectl describe ingress test-node-adv-ingress to view its behav
 > PLEASE NOTE THAT: it may take 5–8 minutes for the node to work with ingress, please be patient. and also you may need to set up firewall rules in gcloud to allow traffic, please refer to the google cloud doc.
 > NOTE 2: the ingress needed a root url (‘/’) send 200 ok to work
 
+## Edit ingress config 
+```
+    $ kubectl edit ingress test-node-adv-ingress
+```
+
 ## Accessing your application
 ``` 
     $ minikube ip
